@@ -4,6 +4,7 @@
 # GitHub
 #    https://github.com/Korchy/blender_packages_plus
 
+from . import pack_plus_props
 from . import pack_plus_ops
 from . import pack_plus_ui
 from .addon import Addon
@@ -23,6 +24,7 @@ bl_info = {
 
 def register():
     if not Addon.dev_mode():
+        pack_plus_props.register()
         pack_plus_ops.register()
         pack_plus_ui.register()
     else:
@@ -35,6 +37,7 @@ def unregister():
     if not Addon.dev_mode():
         pack_plus_ui.unregister()
         pack_plus_ops.unregister()
+        pack_plus_props.unregister()
 
 
 if __name__ == '__main__':
