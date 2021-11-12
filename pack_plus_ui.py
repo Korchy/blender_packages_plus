@@ -13,7 +13,7 @@ class PACK_PLUS_PT_panel_packages(Panel):
     bl_label = 'Packages +'
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
-    bl_category = 'Pack+'
+    bl_category = 'P+'
     bl_order = 0
 
     def draw(self, context):
@@ -39,7 +39,7 @@ class PACK_PLUS_PT_panel_pip(Panel):
     bl_label = 'PIP'
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
-    bl_category = 'Pack+'
+    bl_category = 'P+'
     bl_order = 1
 
     def draw(self, context):
