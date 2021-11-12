@@ -4,8 +4,9 @@
 # GitHub
 #    https://github.com/Korchy/blender_packages_plus
 
-from . import pack_plus_props
+from . import pack_plus_message_box
 from . import pack_plus_ops
+from . import pack_plus_props
 from . import pack_plus_ui
 from .addon import Addon
 
@@ -27,6 +28,7 @@ def register():
         pack_plus_props.register()
         pack_plus_ops.register()
         pack_plus_ui.register()
+        pack_plus_message_box.register()
     else:
         print('It seems you are trying to use the dev version of the '
               + bl_info['name']
@@ -35,6 +37,7 @@ def register():
 
 def unregister():
     if not Addon.dev_mode():
+        pack_plus_message_box.unregister()
         pack_plus_ui.unregister()
         pack_plus_ops.unregister()
         pack_plus_props.unregister()
