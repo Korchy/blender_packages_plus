@@ -18,14 +18,15 @@ class PACK_PLUS_OT_install_pip(Operator):
 
     def execute(self, context):
         props = context.window_manager.pack_plus_props
-        PackPlus.install_pip(
+        rez = PackPlus.install_pip(
             name=props.package_name,
             no_deps=props.no_deps,
-            only_binary=props.only_binary
+            only_binary=props.only_binary,
+            user=props.user
         )
         bpy.ops.pack_plus.messagebox(
             'INVOKE_DEFAULT',
-            message='FINISHED'
+            message=('FINISHED' if rez else 'ERROR! See details in the system console.')
         )
         return {'FINISHED'}
 

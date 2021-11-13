@@ -11,18 +11,24 @@ import subprocess
 class Pip:
 
     @classmethod
-    def install(cls, package, no_deps=False, only_binary=False):
+    def install(cls, package, no_deps=False, only_binary=False, user=False):
         # install new package by name with pip
+        rez = False
         if package:
             # ensure pip before install
             rez = cls.ensure_pip()
-            print(rez)
             # install package
+            opts = []
+            if no_deps:
+                opts.extend(['--no-deps'])
+            if only_binary:
+                opts.extend(['--only-binary', 'all'])
             # a = subprocess.call(
             #     [Path.python(), '-m', 'pip', 'install', '--upgrade', 'scipy', '-t', target]
             # )
             # print('xxxxx')
             # print(a)
+        return rez
 
     @classmethod
     def ensure_pip(cls):

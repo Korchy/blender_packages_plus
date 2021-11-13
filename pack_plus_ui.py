@@ -55,6 +55,10 @@ class PACK_PLUS_PT_panel_pip(Panel):
             data=props,
             property='only_binary'
         )
+        layout.prop(
+            data=props,
+            property='user'
+        )
         layout.operator(
             operator='pack_plus.install_pip',
             icon='IMPORT'

@@ -26,6 +26,11 @@ class PACK_PLUS_Props(PropertyGroup):
         default=False
     )
 
+    user: BoolProperty(
+        name='Install to User home directory',
+        default=False
+    )
+
 
 def register():
     register_class(PACK_PLUS_Props)

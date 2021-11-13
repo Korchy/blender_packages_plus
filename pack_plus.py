@@ -12,13 +12,17 @@ from importlib.util import find_spec
 class PackPlus:
 
     @classmethod
-    def install_pip(cls, name, no_deps, only_binary):
+    def install_pip(cls, name, no_deps=False, only_binary=False, user=False):
         # install new package by name with pip
+        rez = False
         if name:
             rez = Pip.install(
-                package='scipy'
+                package=name,
+                no_deps=no_deps,
+                only_binary=only_binary,
+                user=user
             )
-            print('raz', rez)
+        return rez
 
     @staticmethod
     def is_installed(name):
