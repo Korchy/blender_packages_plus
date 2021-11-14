@@ -59,9 +59,14 @@ class PACK_PLUS_PT_panel_pip(Panel):
             data=props,
             property='user'
         )
-        layout.operator(
+        row = layout.row()
+        row.operator(
             operator='pack_plus.install_pip',
             icon='IMPORT'
+        )
+        row.operator(
+            operator='pack_plus.uninstall_pip',
+            icon='CANCEL'
         )
 
 

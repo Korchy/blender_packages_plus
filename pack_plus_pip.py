@@ -4,9 +4,7 @@
 # GitHub
 #    https://github.com/Korchy/blender_packages_plus
 
-import os
 from .bpy_plus.file_system import Path
-import site
 import subprocess
 import sys
 
@@ -22,24 +20,34 @@ class Pip:
             rez = cls.ensure_pip()
             # install options
             if rez:
-                cmd_opts = []
+                cmd_opts = ['pip', 'install', '--upgrade', package]
                 if no_deps:
                     cmd_opts.extend(['--no-deps'])
                 if only_binary:
                     cmd_opts.extend(['--only-binary', 'all'])
                 if user:
                     cmd_opts.extend(['--user'])
-                    rez =
+                    cls.ensure_site_packages()
+                else:
+                    cmd_opts.extend(['--target', Path.site_packages(source='SYSTEM')])
                 # install package
                 rez = cls.subprocess_call(
                     cmd_opts=cmd_opts
                 )
+        return rez
 
-            # a = subprocess.call(
-            #     [Path.python(), '-m', 'pip', 'install', '--upgrade', 'scipy', '-t', target]
-            # )
-            # print('xxxxx')
-            # print(a)
+    @classmethod
+    def uninstall(cls, package):
+        # uninstall package by name with pip
+        rez = False
+        if package:
+            # ensure pip before install
+            rez = cls.ensure_pip()
+            # uninstall package
+            if rez:
+                rez = cls.subprocess_call(
+                    cmd_opts=['pip', 'uninstall', package, '--yes']
+                )
         return rez
 
     @classmethod
@@ -57,11 +65,7 @@ class Pip:
     @classmethod
     def ensure_site_packages(cls):
         # ensure site_packages
-        site_packages_dir = site.getusersitepackages()
-        if not os.path.exists(site_packages_dir):
-            site_packages_dir = bpy.utils.user_resource('SCRIPTS', "site_package", create=True)
-            site_packages_dir = os.path.join(Path.scripts(source='USER'))
-            site.addsitedir(site_packages_dir)
+        site_packages_dir = Path.site_packages(source='USER')
         if site_packages_dir not in sys.path:
             sys.path.append(site_packages_dir)
 
@@ -70,6 +74,7 @@ class Pip:
         # call subprocess
         cmd = [Path.python(), '-m']
         cmd.extend(cmd_opts)
+        # print(cmd)
         try:
             output = subprocess.check_output(
                 cmd,
@@ -81,5 +86,8 @@ class Pip:
             print(output)
         except subprocess.CalledProcessError as ex:
             print(ex.output)
+            rez = False
+        except Exception as ex:
+            print(ex)
             rez = False
         return rez

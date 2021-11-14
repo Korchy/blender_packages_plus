@@ -27,7 +27,7 @@ class PACK_PLUS_Props(PropertyGroup):
     )
 
     user: BoolProperty(
-        name='Install to User home directory',
+        name='Use the User home directory',
         default=False
     )
 
