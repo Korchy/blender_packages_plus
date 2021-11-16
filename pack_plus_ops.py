@@ -34,9 +34,8 @@ class PACK_PLUS_OT_install_pip(Operator):
         else:
             bpy.ops.pack_plus.messagebox(
                 'INVOKE_DEFAULT',
-                message='You have not Administrative privileges' + '\n'
-                         + 'It may cause errors during installation' + '\n'
-                         + 'Run Blender as Administrator!'
+                message='You have not Administrative privileges.' + '\n'
+                        + 'Run Blender as Administrator!'
             )
         return {'FINISHED'}
 
@@ -66,9 +65,8 @@ class PACK_PLUS_OT_uninstall_pip(Operator):
         else:
             bpy.ops.pack_plus.messagebox(
                 'INVOKE_DEFAULT',
-                message='You have not Administrative privileges' + '\n'
-                         + 'It may cause errors during installation' + '\n'
-                         + 'Run Blender as Administrator!'
+                message='You have not Administrative privileges.' + '\n'
+                        + 'Run Blender as Administrator!'
             )
         return {'FINISHED'}
 
@@ -101,15 +99,50 @@ class PACK_PLUS_OT_check(Operator):
     def execute(self, context):
         props = context.window_manager.pack_plus_props
         rez = PackPlus.is_installed(
-            name=props.package_name
+            package=props.package_name
         )
         bpy.ops.pack_plus.messagebox(
             'INVOKE_DEFAULT',
             message='Package: ' + props.package_name +
                     '\n' + 'Installed: ' + ('Yes' if rez[0] else 'No') +
                     ('\n' + 'Version: ' + rez[1] if rez[1] else '') +
-                    ('\n' + 'Installed in: ' + PackPlus.source(package=props.package_name) if rez[0] else '')
+                    ('\n' + 'Installed in: ' + rez[2] if rez[0] else '')
         )
+        return {'FINISHED'}
+
+    @classmethod
+    def poll(cls, context):
+        return bool(context.window_manager.pack_plus_props.package_name)
+
+
+class PACK_PLUS_OT_import_code(Operator):
+    bl_idname = 'pack_plus.import_code'
+    bl_label = 'Code'
+    bl_description = 'Generate code for import instructions'
+    bl_options = {'REGISTER'}
+
+    def execute(self, context):
+        props = context.window_manager.pack_plus_props
+        installed = PackPlus.is_installed(
+            package=props.package_name
+        )
+        if installed[0]:
+            code = PackPlus.import_code(
+                package=props.package_name
+            )
+            if code:
+                area = next((area_ for area_ in context.screen.areas if area_.type == 'TEXT_EDITOR'), None)
+                if not area:
+                    area = next((area_ for area_ in context.screen.areas if area_.type not in ['PROPERTIES', 'OUTLINER']), None)
+                    area.type = 'TEXT_EDITOR'
+                if area:
+                    text = next((text_ for text_ in context.blend_data.texts if text_.name == 'pack_plus_import_code'), None)
+                    if not text:
+                        text = context.blend_data.texts.new(name='pack_plus_import_code')
+                    if text:
+                        text.from_string(string=code)
+                        area.spaces.active.text = text
+                        text.cursor_set(line=0, character=0)
         return {'FINISHED'}
 
     @classmethod
@@ -121,9 +154,11 @@ def register():
     register_class(PACK_PLUS_OT_install_pip)
     register_class(PACK_PLUS_OT_uninstall_pip)
     register_class(PACK_PLUS_OT_check)
+    register_class(PACK_PLUS_OT_import_code)
 
 
 def unregister():
+    unregister_class(PACK_PLUS_OT_import_code)
     unregister_class(PACK_PLUS_OT_check)
     unregister_class(PACK_PLUS_OT_uninstall_pip)
     unregister_class(PACK_PLUS_OT_install_pip)

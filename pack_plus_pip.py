@@ -27,7 +27,7 @@ class Pip:
                     cmd_opts.extend(['--only-binary', 'all'])
                 if user:
                     cmd_opts.extend(['--user'])
-                    cls.ensure_site_packages()
+                    cls.ensure_user_site_packages()
                 else:
                     cmd_opts.extend(['--target', Path.site_packages(source='SYSTEM')])
                 # install package
@@ -62,9 +62,9 @@ class Pip:
             )
         return rez
 
-    @classmethod
-    def ensure_site_packages(cls):
-        # ensure site_packages
+    @staticmethod
+    def ensure_user_site_packages():
+        # ensure user site_packages
         site_packages_dir = Path.site_packages(source='USER')
         if site_packages_dir not in sys.path:
             sys.path.append(site_packages_dir)

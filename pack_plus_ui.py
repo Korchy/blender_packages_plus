@@ -26,11 +26,16 @@ class PACK_PLUS_PT_panel_packages(Panel):
             property='package_name',
             text=''
         )
-        # check
+        # check/code
         layout.separator()
-        layout.operator(
+        row = layout.row()
+        row.operator(
             operator='pack_plus.check',
             icon='CHECKBOX_HLT'
+        )
+        row.operator(
+            operator='pack_plus.import_code',
+            icon='SCRIPT'
         )
 
 

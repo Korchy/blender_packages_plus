@@ -34,27 +34,36 @@ class PackPlus:
             )
 
     @staticmethod
-    def is_installed(name: str) -> tuple:
+    def is_installed(package: str) -> tuple:
         # check if package "name" is installed
         installed = None
         version_ = None
-        if name and find_spec(name=name):
-            try:
-                version_ = version(name)
-                installed = True
-            except PackageNotFoundError as ex:
-                pass
-        return installed, version_
+        source = None
+        if package:
+            # search in Blender installation dir
+            find_spec_ = find_spec(name=package)
+            if not find_spec_:
+                # not found - search in user dir
+                Pip.ensure_user_site_packages()
+                find_spec_ = find_spec(name=package)
+            if find_spec_:
+                try:
+                    version_ = version(package)
+                    installed = True
+                    installed_dir = os.path.dirname(find_spec_.origin)
+                    if Path.blender_v().lower() in installed_dir.lower():
+                        source = 'BLENDER'
+                    else:
+                        source = 'USER'
+                except PackageNotFoundError:
+                    pass
+        return installed, version_, source
 
-    @staticmethod
-    def source(package: str):
+    @classmethod
+    def source(cls, package: str):
         # get source where package is installed
         if package:
-            installed_dir = os.path.dirname(find_spec(name=package).origin)
-            if Path.blender_v().lower() in installed_dir.lower():
-                return 'SYSTEM'
-            else:
-                return 'USER'
+            return cls.is_installed(package=package)[2]
         return None
 
     @staticmethod
@@ -65,7 +74,7 @@ class PackPlus:
             # Windows
             try:
                 is_admin = bool(ctypes.windll.shell32.IsUserAnAdmin())
-            except Exception as ex:
+            except Exception:
                 is_admin = False
         elif system.startswith('posix') or system.startswith('darwin'):
             # Linux of MacOs
@@ -74,3 +83,32 @@ class PackPlus:
             is_admin = None
             print('Can not get information about the OS privileges')
         return is_admin
+
+    @classmethod
+    def import_code(cls, package: str) -> str:
+        # generate code for import instructions based on where package is installed
+        code = ''
+        source = cls.source(package=package)
+        if source == 'BLENDER':
+            code = 'import ' + package
+        elif source == 'USER':
+            code_ = [
+                'def ensure_user_site_packages(package):',
+                '    # this needs to be called only once, and then you can import the package as usual',
+                '    import bpy',
+                '    import os',
+                '    import site',
+                '    import sys',
+                '    user_site_packages_dir = site.getusersitepackages()',
+                '    if not os.path.exists(user_site_packages_dir):'
+                '        user_site_packages_dir = os.path.join(bpy.utils.user_resource(\'SCRIPTS\'), \'site-packages\')',
+                '    if user_site_packages_dir not in sys.path:',
+                '        sys.path.append(user_site_packages_dir)',
+                '',
+                '# change the _PACKAGE_ to the required package name',
+                'ensure_user_site_packages(\'_PACKAGE_\')',
+                '',
+                'import _PACKAGE_'
+            ]
+            code = '\n'.join(code_)
+        return code
