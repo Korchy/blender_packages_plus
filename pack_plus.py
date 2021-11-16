@@ -47,14 +47,14 @@ class PackPlus:
                 Pip.ensure_user_site_packages()
                 find_spec_ = find_spec(name=package)
             if find_spec_:
+                installed = True
+                installed_dir = os.path.dirname(find_spec_.origin)
+                if Path.blender_v().lower() in installed_dir.lower():
+                    source = 'BLENDER'
+                else:
+                    source = 'USER'
                 try:
                     version_ = version(package)
-                    installed = True
-                    installed_dir = os.path.dirname(find_spec_.origin)
-                    if Path.blender_v().lower() in installed_dir.lower():
-                        source = 'BLENDER'
-                    else:
-                        source = 'USER'
                 except PackageNotFoundError:
                     pass
         return installed, version_, source
@@ -76,7 +76,7 @@ class PackPlus:
                 is_admin = bool(ctypes.windll.shell32.IsUserAnAdmin())
             except Exception:
                 is_admin = False
-        elif system.startswith('posix') or system.startswith('darwin'):
+        elif system.startswith('linux') or system.startswith('darwin'):
             # Linux of MacOs
             is_admin = os.getuid() == 0
         else:
@@ -110,6 +110,8 @@ class PackPlus:
                 '',
                 '# and import the required package as usual',
                 'import ' + package,
+                '',
+                '# here you can place your code',
                 ''
             ]
             code = '\n'.join(code_)

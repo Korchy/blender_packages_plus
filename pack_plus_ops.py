@@ -76,7 +76,7 @@ class PACK_PLUS_OT_uninstall_pip(Operator):
 
     def invoke(self, context, event):
         package_name = context.window_manager.pack_plus_props.package_name
-        if PackPlus.is_installed(name=package_name)[0]:
+        if PackPlus.is_installed(package=package_name)[0]:
             return context.window_manager.invoke_props_dialog(self, width=200)
         else:
             bpy.ops.pack_plus.messagebox(

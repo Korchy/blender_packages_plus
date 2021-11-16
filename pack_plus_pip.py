@@ -76,14 +76,9 @@ class Pip:
         cmd.extend(cmd_opts)
         # print(cmd)
         try:
-            output = subprocess.check_output(
-                cmd,
-                stderr=subprocess.STDOUT,
-                shell=True,
-                universal_newlines=True
-            )
-            rez = True
+            output = subprocess.check_call(cmd)
             print(output)
+            rez = True
         except subprocess.CalledProcessError as ex:
             print(ex.output)
             rez = False
