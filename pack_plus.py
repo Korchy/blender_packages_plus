@@ -28,7 +28,7 @@ class PackPlus:
     @classmethod
     def uninstall_pip(cls, name: str) -> bool:
         # uninstall package by name with pip
-        if cls.is_installed(name=name)[0]:
+        if cls.is_installed(package=name)[0]:
             return Pip.uninstall(
                 package=name
             )
@@ -105,10 +105,12 @@ class PackPlus:
                 '    if user_site_packages_dir not in sys.path:',
                 '        sys.path.append(user_site_packages_dir)',
                 '',
-                '# change the _PACKAGE_ to the required package name',
-                'ensure_user_site_packages(\'_PACKAGE_\')',
+                '# call this function once',
+                'ensure_user_site_packages(' + package + ')',
                 '',
-                'import _PACKAGE_'
+                '# and import the required package as usual',
+                'import ' + package,
+                ''
             ]
             code = '\n'.join(code_)
         return code
