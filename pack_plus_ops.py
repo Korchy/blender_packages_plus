@@ -19,22 +19,24 @@ class PACK_PLUS_OT_install_pip(Operator):
     def execute(self, context):
         props = context.window_manager.pack_plus_props
         # check privileges
-        if PackPlus.is_admin() or context.window_manager.pack_plus_props.source == 'USER':
-            # install
-            rez = PackPlus.install_pip(
-                name=props.package_name,
-                no_deps=props.no_deps,
-                only_binary=props.only_binary,
-                user=props.source
-            )
+        # if PackPlus.is_admin() or context.window_manager.pack_plus_props.source == 'USER':
+        # install
+        rez = PackPlus.install_pip(
+            name=props.package_name,
+            no_deps=props.no_deps,
+            only_binary=props.only_binary,
+            user=props.source
+        )
+        if rez:
             bpy.ops.pack_plus.messagebox(
                 'INVOKE_DEFAULT',
-                message=('Successfully installed' if rez else 'ERROR! See details in the System Console.')
+                message='Successfully installed'
             )
         else:
             bpy.ops.pack_plus.messagebox(
                 'INVOKE_DEFAULT',
-                message='You have not Administrative privileges.' + '\n'
+                message='ERROR! See details in the System Console.' + '\n'
+                        + 'Maybe you have not Administrative privileges.' + '\n'
                         + 'Run Blender as Administrator (Windows) or root (Linux)!'
             )
         return {'FINISHED'}
@@ -53,20 +55,21 @@ class PACK_PLUS_OT_uninstall_pip(Operator):
     def execute(self, context):
         props = context.window_manager.pack_plus_props
         # check privileges
-        if PackPlus.is_admin() or PackPlus.is_installed(package=props.package_name)[2] == 'USER':
-            # uninstall
-            rez = PackPlus.uninstall_pip(
-                name=props.package_name
-            )
+        # if PackPlus.is_admin() or PackPlus.is_installed(package=props.package_name)[2] == 'USER':
+        # uninstall
+        rez = PackPlus.uninstall_pip(
+            name=props.package_name
+        )
+        if rez:
             bpy.ops.pack_plus.messagebox(
                 'INVOKE_DEFAULT',
-                message=('Successfully uninstalled. \n Restart Blender for clean-up memory.' if rez
-                         else 'ERROR! See details in the System Console.')
+                message='Successfully uninstalled. \n Restart Blender for clean-up memory.'
             )
         else:
             bpy.ops.pack_plus.messagebox(
                 'INVOKE_DEFAULT',
-                message='You have not Administrative privileges.' + '\n'
+                message='ERROR! See details in the System Console.' + '\n'
+                        + 'Maybe you have not Administrative privileges.' + '\n'
                         + 'Run Blender as Administrator (Windows) or root (Linux)!'
             )
         return {'FINISHED'}

@@ -6,6 +6,7 @@
 
 from . import pack_plus_message_box
 from . import pack_plus_ops
+from . import pack_plus_prefs
 from . import pack_plus_props
 from . import pack_plus_ui
 from .addon import Addon
@@ -25,6 +26,7 @@ bl_info = {
 
 def register():
     if not Addon.dev_mode():
+        pack_plus_prefs.register()
         pack_plus_props.register()
         pack_plus_ops.register()
         pack_plus_ui.register()
@@ -41,6 +43,7 @@ def unregister():
         pack_plus_ui.unregister()
         pack_plus_ops.unregister()
         pack_plus_props.unregister()
+        pack_plus_prefs.unregister()
 
 
 if __name__ == '__main__':

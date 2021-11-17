@@ -4,14 +4,13 @@
 # GitHub
 #    https://github.com/Korchy/blender_packages_plus
 
+import bpy
 from bpy.types import Panel
 from bpy.utils import register_class, unregister_class
 
 
-class PACK_PLUS_PT_panel_packages(Panel):
-    bl_idname = 'PACK_PLUS_PT_panel_packages'
+class PACK_PLUS_PT_panel_packages:
     bl_label = 'Packages +'
-    bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
     bl_category = 'P+'
     bl_order = 0
@@ -39,7 +38,17 @@ class PACK_PLUS_PT_panel_packages(Panel):
         )
 
 
-class PACK_PLUS_PT_panel_pip(Panel):
+class PACK_PLUS_PT_panel_packages_viewport(Panel, PACK_PLUS_PT_panel_packages):
+    bl_idname = 'PACK_PLUS_PT_panel_packages_viewport'
+    bl_space_type = 'VIEW_3D'
+
+
+class PACK_PLUS_PT_panel_packages_text(Panel, PACK_PLUS_PT_panel_packages):
+    bl_idname = 'PACK_PLUS_PT_panel_packages_text'
+    bl_space_type = 'TEXT_EDITOR'
+
+
+class PACK_PLUS_PT_panel_pip:
     bl_idname = 'PACK_PLUS_PT_panel_pip'
     bl_label = 'PIP'
     bl_space_type = 'VIEW_3D'
@@ -76,11 +85,47 @@ class PACK_PLUS_PT_panel_pip(Panel):
         )
 
 
+class PACK_PLUS_PT_panel_pip_viewport(Panel, PACK_PLUS_PT_panel_pip):
+    bl_idname = 'PACK_PLUS_PT_panel_pip_viewport'
+    bl_space_type = 'VIEW_3D'
+
+
+class PACK_PLUS_PT_panel_pip_text(Panel, PACK_PLUS_PT_panel_pip):
+    bl_idname = 'PACK_PLUS_PT_panel_pip_text'
+    bl_space_type = 'TEXT_EDITOR'
+
+
+def register_viewport():
+    if bpy.context.preferences.addons[__package__].preferences.panel_viewport:
+        register_class(PACK_PLUS_PT_panel_packages_viewport)
+        register_class(PACK_PLUS_PT_panel_pip_viewport)
+
+
+def register_text_editor():
+    if bpy.context.preferences.addons[__package__].preferences.panel_text_editor:
+        register_class(PACK_PLUS_PT_panel_packages_text)
+        register_class(PACK_PLUS_PT_panel_pip_text)
+
+
+def unregister_viewport():
+    if hasattr(bpy.types, 'PACK_PLUS_PT_panel_pip_viewport'):
+        unregister_class(PACK_PLUS_PT_panel_pip_viewport)
+    if hasattr(bpy.types, 'PACK_PLUS_PT_panel_packages_viewport'):
+        unregister_class(PACK_PLUS_PT_panel_packages_viewport)
+
+
+def unregister_text_editor():
+    if hasattr(bpy.types, 'PACK_PLUS_PT_panel_pip_text'):
+        unregister_class(PACK_PLUS_PT_panel_pip_text)
+    if hasattr(bpy.types, 'PACK_PLUS_PT_panel_packages_text'):
+        unregister_class(PACK_PLUS_PT_panel_packages_text)
+
+
 def register():
-    register_class(PACK_PLUS_PT_panel_packages)
-    register_class(PACK_PLUS_PT_panel_pip)
+    register_viewport()
+    register_text_editor()
 
 
 def unregister():
-    unregister_class(PACK_PLUS_PT_panel_pip)
-    unregister_class(PACK_PLUS_PT_panel_packages)
+    unregister_text_editor()
+    unregister_viewport()
