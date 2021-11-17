@@ -53,7 +53,7 @@ class PACK_PLUS_OT_uninstall_pip(Operator):
     def execute(self, context):
         props = context.window_manager.pack_plus_props
         # check privileges
-        if PackPlus.is_admin() or context.window_manager.pack_plus_props.source == 'USER':
+        if PackPlus.is_admin() or PackPlus.is_installed(package=props.package_name)[2] == 'USER':
             # uninstall
             rez = PackPlus.uninstall_pip(
                 name=props.package_name
