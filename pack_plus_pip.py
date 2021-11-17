@@ -12,7 +12,7 @@ import sys
 class Pip:
 
     @classmethod
-    def install(cls, package, no_deps=False, only_binary=False, user=False):
+    def install(cls, package, no_deps=False, only_binary=False, user='USER'):
         # install new package by name with pip
         rez = False
         if package:
@@ -25,7 +25,7 @@ class Pip:
                     cmd_opts.extend(['--no-deps'])
                 if only_binary:
                     cmd_opts.extend(['--only-binary', 'all'])
-                if user:
+                if user == 'USER':
                     cmd_opts.extend(['--user'])
                     cls.ensure_user_site_packages()
                 else:
@@ -74,7 +74,7 @@ class Pip:
         # call subprocess
         cmd = [Path.python(), '-m']
         cmd.extend(cmd_opts)
-        # print(cmd)
+        print(cmd)
         try:
             output = subprocess.check_call(cmd)
             print(output)

@@ -62,7 +62,8 @@ class PACK_PLUS_PT_panel_pip(Panel):
         )
         layout.prop(
             data=props,
-            property='user'
+            property='source',
+            expand=True
         )
         row = layout.row()
         row.operator(

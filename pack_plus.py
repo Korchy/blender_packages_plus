@@ -16,7 +16,7 @@ import platform
 class PackPlus:
 
     @classmethod
-    def install_pip(cls, name: str, no_deps: bool = False, only_binary: bool = False, user: bool = False) -> bool:
+    def install_pip(cls, name: str, no_deps: bool = False, only_binary: bool = False, user: str = 'USER') -> bool:
         # install new package by name with pip
         return Pip.install(
             package=name,
@@ -76,7 +76,7 @@ class PackPlus:
                 is_admin = bool(ctypes.windll.shell32.IsUserAnAdmin())
             except Exception:
                 is_admin = False
-        elif system.startswith('linux') or system.startswith('darwin'):
+        elif system.startswith('linux') or system.startswith('posix') or system.startswith('darwin'):
             # Linux of MacOs
             is_admin = os.getuid() == 0
         else:
@@ -100,15 +100,15 @@ class PackPlus:
                 '    import site',
                 '    import sys',
                 '    user_site_packages_dir = site.getusersitepackages()',
-                '    if not os.path.exists(user_site_packages_dir):'
+                '    if not os.path.exists(user_site_packages_dir):',
                 '        user_site_packages_dir = os.path.join(bpy.utils.user_resource(\'SCRIPTS\'), \'site-packages\')',
                 '    if user_site_packages_dir not in sys.path:',
                 '        sys.path.append(user_site_packages_dir)',
                 '',
                 '# call this function once',
-                'ensure_user_site_packages(' + package + ')',
+                'ensure_user_site_packages(\'' + package + '\')',
                 '',
-                '# and import the required package as usual',
+                '# and import the required package as usual anywhere in your code',
                 'import ' + package,
                 '',
                 '# here you can place your code',

@@ -4,7 +4,7 @@
 # GitHub
 #    https://github.com/Korchy/blender_packages_plus
 
-from bpy.props import BoolProperty, PointerProperty, StringProperty
+from bpy.props import BoolProperty, PointerProperty, StringProperty, EnumProperty
 from bpy.types import PropertyGroup, WindowManager
 from bpy.utils import register_class, unregister_class
 
@@ -26,9 +26,13 @@ class PACK_PLUS_Props(PropertyGroup):
         default=False
     )
 
-    user: BoolProperty(
-        name='Use the User home directory',
-        default=False
+    source: EnumProperty(
+        name='Use the /USER or /BLENDER directory',
+        items=[
+            ('USER', '/USER', 'use /USER directory', '', 0),
+            ('BLENDER', '/BLENDER', 'use /BLENDER directory', '', 1)
+        ],
+        default='USER'
     )
 
 

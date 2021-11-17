@@ -19,13 +19,13 @@ class PACK_PLUS_OT_install_pip(Operator):
     def execute(self, context):
         props = context.window_manager.pack_plus_props
         # check privileges
-        if PackPlus.is_admin() or context.window_manager.pack_plus_props.user:
+        if PackPlus.is_admin() or context.window_manager.pack_plus_props.source == 'USER':
             # install
             rez = PackPlus.install_pip(
                 name=props.package_name,
                 no_deps=props.no_deps,
                 only_binary=props.only_binary,
-                user=props.user
+                user=props.source
             )
             bpy.ops.pack_plus.messagebox(
                 'INVOKE_DEFAULT',
@@ -35,7 +35,7 @@ class PACK_PLUS_OT_install_pip(Operator):
             bpy.ops.pack_plus.messagebox(
                 'INVOKE_DEFAULT',
                 message='You have not Administrative privileges.' + '\n'
-                        + 'Run Blender as Administrator!'
+                        + 'Run Blender as Administrator (Windows) or root (Linux)!'
             )
         return {'FINISHED'}
 
@@ -53,20 +53,21 @@ class PACK_PLUS_OT_uninstall_pip(Operator):
     def execute(self, context):
         props = context.window_manager.pack_plus_props
         # check privileges
-        if PackPlus.is_admin() or context.window_manager.pack_plus_props.user:
+        if PackPlus.is_admin() or context.window_manager.pack_plus_props.source == 'USER':
             # uninstall
             rez = PackPlus.uninstall_pip(
                 name=props.package_name
             )
             bpy.ops.pack_plus.messagebox(
                 'INVOKE_DEFAULT',
-                message=('Successfully uninstalled' if rez else 'ERROR! See details in the System Console.')
+                message=('Successfully uninstalled. \n Restart Blender for clean-up memory.' if rez
+                         else 'ERROR! See details in the System Console.')
             )
         else:
             bpy.ops.pack_plus.messagebox(
                 'INVOKE_DEFAULT',
                 message='You have not Administrative privileges.' + '\n'
-                        + 'Run Blender as Administrator!'
+                        + 'Run Blender as Administrator (Windows) or root (Linux)!'
             )
         return {'FINISHED'}
 
@@ -143,6 +144,11 @@ class PACK_PLUS_OT_import_code(Operator):
                         text.from_string(string=code)
                         area.spaces.active.text = text
                         text.cursor_set(line=0, character=0)
+        else:
+            bpy.ops.pack_plus.messagebox(
+                'INVOKE_DEFAULT',
+                message=('Package: ' + props.package_name + ' is not installed!' + '\n' + 'Can\'t generate code.')
+            )
         return {'FINISHED'}
 
     @classmethod
