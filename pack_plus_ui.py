@@ -74,6 +74,12 @@ class PACK_PLUS_PT_panel_pip:
             property='source',
             expand=True
         )
+        if props.source == 'EXTERNAL':
+            layout.prop(
+                data=props,
+                property='target',
+                text=''
+            )
         row = layout.row()
         row.operator(
             operator='pack_plus.install_pip',

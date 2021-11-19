@@ -16,13 +16,13 @@ import platform
 class PackPlus:
 
     @classmethod
-    def install_pip(cls, name: str, no_deps: bool = False, only_binary: bool = False, user: str = 'USER') -> bool:
+    def install_pip(cls, name: str, no_deps: bool = False, only_binary: bool = False, target: str = 'USER') -> bool:
         # install new package by name with pip
         return Pip.install(
             package=name,
             no_deps=no_deps,
             only_binary=only_binary,
-            user=user
+            target=target
         )
 
     @classmethod

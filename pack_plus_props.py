@@ -29,10 +29,17 @@ class PACK_PLUS_Props(PropertyGroup):
     source: EnumProperty(
         name='Use the /USER or /BLENDER directory',
         items=[
-            ('USER', '/USER', 'use /USER directory', '', 0),
-            ('BLENDER', '/BLENDER', 'use /BLENDER directory', '', 1)
+            ('USER', '/USER', 'Use /USER directory', '', 0),
+            ('BLENDER', '/BLENDER', 'Use /BLENDER directory', '', 1),
+            ('EXTERNAL', 'EXTERNAL', 'Type the required external path', '', 2)
         ],
         default='USER'
+    )
+
+    target: StringProperty(
+        subtype='DIR_PATH',
+        name='External path to install packages',
+        default=''
     )
 
 

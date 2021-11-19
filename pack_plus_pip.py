@@ -12,7 +12,7 @@ import sys
 class Pip:
 
     @classmethod
-    def install(cls, package, no_deps=False, only_binary=False, user='USER'):
+    def install(cls, package: str, no_deps: bool = False, only_binary: bool = False, target: str = ''):
         # install new package by name with pip
         rez = False
         if package:
@@ -25,11 +25,14 @@ class Pip:
                     cmd_opts.extend(['--no-deps'])
                 if only_binary:
                     cmd_opts.extend(['--only-binary', 'all'])
-                if user == 'USER':
+                if target == 'USER':
                     cmd_opts.extend(['--user'])
                     cls.ensure_user_site_packages()
                 else:
-                    cmd_opts.extend(['--target', Path.site_packages(source='SYSTEM')])
+                    if target:
+                        cmd_opts.extend(['--target', Path.abs(target)])
+                    else:
+                        cmd_opts.extend(['--target', Path.site_packages(source='SYSTEM')])
                 # install package
                 rez = cls.subprocess_call(
                     cmd_opts=cmd_opts

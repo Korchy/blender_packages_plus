@@ -23,7 +23,7 @@ class PACK_PLUS_OT_install_pip(Operator):
             name=props.package_name,
             no_deps=props.no_deps,
             only_binary=props.only_binary,
-            user=props.source
+            target=(props.source if props.source == 'USER' else props.target)
         )
         if rez:
             bpy.ops.pack_plus.messagebox(
