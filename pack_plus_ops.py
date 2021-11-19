@@ -18,8 +18,6 @@ class PACK_PLUS_OT_install_pip(Operator):
 
     def execute(self, context):
         props = context.window_manager.pack_plus_props
-        # check privileges
-        # if PackPlus.is_admin() or context.window_manager.pack_plus_props.source == 'USER':
         # install
         rez = PackPlus.install_pip(
             name=props.package_name,
@@ -54,8 +52,6 @@ class PACK_PLUS_OT_uninstall_pip(Operator):
 
     def execute(self, context):
         props = context.window_manager.pack_plus_props
-        # check privileges
-        # if PackPlus.is_admin() or PackPlus.is_installed(package=props.package_name)[2] == 'USER':
         # uninstall
         rez = PackPlus.uninstall_pip(
             name=props.package_name
@@ -107,10 +103,12 @@ class PACK_PLUS_OT_check(Operator):
         )
         bpy.ops.pack_plus.messagebox(
             'INVOKE_DEFAULT',
+            width=600,
             message='Package: ' + props.package_name +
                     '\n' + 'Installed: ' + ('Yes' if rez[0] else 'No') +
                     ('\n' + 'Version: ' + rez[1] if rez[1] else '') +
-                    ('\n' + 'Installed in: ' + rez[2] if rez[0] else '')
+                    ('\n' + 'Installed source: ' + rez[2] if rez[0] else '') +
+                    ('\n' + 'Installed path: ' + rez[3] if rez[0] else '')
         )
         return {'FINISHED'}
 

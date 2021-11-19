@@ -60,7 +60,7 @@ class PACK_PLUS_PT_panel_pip:
         layout = self.layout
         props = context.window_manager.pack_plus_props
         # install
-        layout.separator()
+        # layout.separator()
         layout.prop(
             data=props,
             property='no_deps'

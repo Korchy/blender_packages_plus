@@ -32,6 +32,8 @@ class PackPlus:
             return Pip.uninstall(
                 package=name
             )
+        else:
+            return False
 
     @staticmethod
     def is_installed(package: str) -> tuple:
@@ -39,6 +41,7 @@ class PackPlus:
         installed = None
         version_ = None
         source = None
+        installed_dir = None
         if package:
             # search in Blender installation dir
             find_spec_ = find_spec(name=package)
@@ -57,7 +60,7 @@ class PackPlus:
                     version_ = version(package)
                 except PackageNotFoundError:
                     pass
-        return installed, version_, source
+        return installed, version_, source, installed_dir
 
     @classmethod
     def source(cls, package: str):
