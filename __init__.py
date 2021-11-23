@@ -17,9 +17,9 @@ bl_info = {
     'author': 'Nikita Akimov',
     'version': (1, 0, 0),
     'blender': (2, 93, 0),
-    'location': 'Preferences, 3D Viewport - N panel, Text Editor - N panel',
-    'wiki_url': 'https://b3d.interplanety.org/en/',
-    'tracker_url': 'https://b3d.interplanety.org/en/',
+    'location': '3D Viewport - N panel, Text Editor - N panel',
+    'wiki_url': 'https://b3d.interplanety.org/en/blender-add-on-packages-plus/',
+    'tracker_url': 'https://b3d.interplanety.org/en/blender-add-on-packages-plus/',
     'description': 'Add-on to simplify installing external Python packages to Blender'
 }
 
